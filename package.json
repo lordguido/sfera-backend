@@ -1,0 +1,19 @@
+{
+  "name": "backend-sfera",
+  "version": "1.0.0",
+  "description": "O backend do software Sfera, fornecendo APIs e funcionalidades para gerenciar inventário, vendas, clientes e relatórios em lojas de varejo.",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lordguido/sfera-backend.git"
+  },
+  "author": "Rodrigo Dematei de Freitas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lordguido/sfera-backend/issues"
+  },
+  "homepage": "https://github.com/lordguido/sfera-backend#readme"
+}
