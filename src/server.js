@@ -5,11 +5,11 @@ import chalk from 'chalk';
 import http from 'http';
 
 const envFiles = {
-  prod: '.env.prod',
-  dev: '.env.dev',
+  prod: './src/config/.env.prod',
+  dev: './src/config/.env.dev',
 };
 
-const envPath = envFiles[process.env.NODE_ENV] || envFiles.dev;
+const envPath = envFiles[process.env.NODE_ENV] || './src/config/.env';
 dotenv.config({ path: envPath });
 
 const port = process.env.APP_PORT;
