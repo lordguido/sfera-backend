@@ -10,7 +10,9 @@ const envFiles = {
 };
 
 const envPath = envFiles[process.env.NODE_ENV] || './src/config/.env';
-dotenv.config({ path: envPath });
+dotenv.config({
+  path: envPath,
+});
 
 const port = process.env.APP_PORT;
 const version = process.env.APP_VERSION;
@@ -23,7 +25,9 @@ if (!port || !version) {
 const environment = process.env.NODE_ENV === 'prod' ? 'PRODUCTION' : 'DEVELOPMENT';
 
 const server = http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.writeHead(200, {
+    'Content-Type': 'text/plain',
+  });
   if (req.url == '/') {
     console.log('Hello World');
     res.end('Hello World');
