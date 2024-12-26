@@ -1,44 +1,13 @@
 // SERVIDOR HTTP
-import dotenv from 'dotenv';
+import http from 'http';
 import chalk from 'chalk';
 
-import http from 'http';
+import config from './config/configServer.js';
+import handleRoutes from './routes/routes.js';
 
-const envFiles = {
-  prod: './src/config/.env.prod',
-  dev: './src/config/.env.dev',
-};
+const server = http.createServer(handleRoutes);
 
-const envPath = envFiles[process.env.NODE_ENV] || './src/config/.env';
-dotenv.config({
-  path: envPath,
-});
-
-const port = process.env.APP_PORT;
-const version = process.env.APP_VERSION;
-
-if (!port || !version) {
-  console.error(chalk.red.bold('Required environment variables are missing'));
-  process.exit(1);
-}
-
-const environment = process.env.NODE_ENV === 'prod' ? 'PRODUCTION' : 'DEVELOPMENT';
-
-const server = http.createServer((req, res) => {
-  res.writeHead(200, {
-    'Content-Type': 'text/plain',
-  });
-  if (req.url == '/') {
-    console.log('Hello World');
-    res.end('Hello World');
-  } else if (req.url == '/test') {
-    res.end('Test Page');
-  } else {
-    res.end('Page Not Found');
-  }
-});
-
-server.listen(port, () => {
+server.listen(config.port, () => {
   const borderWidth = 22;
   const border = '━'.repeat(borderWidth);
   const centerText = (text, width) => {
@@ -47,9 +16,9 @@ server.listen(port, () => {
   };
 
   const serverStarted = centerText('🟢 Server Started 🟢', borderWidth);
-  const portText = centerText(`On Port: ${port}`, borderWidth);
-  const versionText = centerText(`Version: ${version}`, borderWidth);
-  const envText = centerText(`${environment}`, borderWidth);
+  const portText = centerText(`On Port: ${config.port}`, borderWidth);
+  const versionText = centerText(`Version: ${config.version}`, borderWidth);
+  const envText = centerText(`${config.environment}`, borderWidth);
 
   console.info(
     '\n',
