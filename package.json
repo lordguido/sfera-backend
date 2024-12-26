@@ -1,5 +1,6 @@
 {
   "name": "backend-sfera",
+  "type": "module",
   "version": "1.0.0",
   "description": "O backend do software Sfera, fornecendo APIs e funcionalidades para gerenciar inventário, vendas, clientes e relatórios em lojas de varejo.",
   "main": "src/server.js",
@@ -7,8 +8,8 @@
     "format": "prettier --write .",
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch src/server.js",
-    "start": "node src/server.js"
+    "dev": "cross-env NODE_ENV=dev node --watch src/server.js",
+    "start": "cross-env NODE_ENV=prod node src/server.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,8 @@
   "homepage": "https://github.com/lordguido/sfera-backend#readme",
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.7",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
