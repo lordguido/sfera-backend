@@ -17,10 +17,6 @@
   },
   "author": "Rodrigo Dematei de Freitas",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/lordguido/sfera-backend/issues"
-  },
-  "homepage": "https://github.com/lordguido/sfera-backend#readme",
   "devDependencies": {
     "@eslint/js": "^9.17.0",
     "cross-env": "^7.0.3",
