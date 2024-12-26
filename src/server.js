@@ -1,5 +1,7 @@
 // SERVIDOR HTTP
 import dotenv from 'dotenv';
+import chalk from 'chalk';
+
 import http from 'http';
 
 const envFiles = {
@@ -14,9 +16,11 @@ const port = process.env.APP_PORT;
 const version = process.env.APP_VERSION;
 
 if (!port || !version) {
-  console.error('Required environment variables are missing');
+  console.error(chalk.red.bold('Required environment variables are missing'));
   process.exit(1);
 }
+
+const environment = process.env.NODE_ENV === 'prod' ? 'PRODUCTION' : 'DEVELOPMENT';
 
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
@@ -31,5 +35,37 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(port, () => {
-  console.log(`Server is running on port ${port} and version ${version}`);
+  const borderWidth = 22;
+  const border = '━'.repeat(borderWidth);
+  const centerText = (text, width) => {
+    const padding = Math.floor((width - text.length) / 2);
+    return ' '.repeat(padding) + text + ' '.repeat(width - text.length - padding);
+  };
+
+  const serverStarted = centerText('🟢 Server Started 🟢', borderWidth);
+  const portText = centerText(`On Port: ${port}`, borderWidth);
+  const versionText = centerText(`Version: ${version}`, borderWidth);
+  const envText = centerText(`${environment}`, borderWidth);
+
+  console.info(
+    '\n',
+    chalk.green.bold(`┏${border}┓`),
+    '\n',
+    `${chalk.green.bold('┃')}${chalk.green.bold(serverStarted)}${chalk.green.bold('┃')}`,
+    '\n',
+    chalk.green.bold(`┣${border}┫`),
+    '\n',
+    `${chalk.green.bold('┃')}${chalk.white.bold(portText)}${chalk.green.bold('┃')}`,
+    '\n',
+    chalk.green.bold(`┣${border}┫`),
+    '\n',
+    `${chalk.green.bold('┃')}${chalk.white.bold(versionText)}${chalk.green.bold('┃')}`,
+    '\n',
+    chalk.green.bold(`┣${border}┫`),
+    '\n',
+    `${chalk.green.bold('┃')}${chalk.white.bold(envText)}${chalk.green.bold('┃')}`,
+    '\n',
+    chalk.green.bold(`┗${border}┛`),
+    '\n'
+  );
 });
