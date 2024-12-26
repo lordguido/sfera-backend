@@ -5,6 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write .",
     "lint": "eslint .",
     "dev": "node --watch src/server.js"
   },
@@ -21,6 +22,9 @@
   "devDependencies": {
     "@eslint/js": "^9.17.0",
     "eslint": "^9.17.0",
-    "globals": "^15.14.0"
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2"
   }
 }
