@@ -1,12 +1,12 @@
-import sequelize from './database.js';
+import connection from './index.js';
 
 const syncDatabase = async () => {
   try {
     if (process.env.NODE_ENV === 'dev') {
-      await sequelize.sync({ alter: true });
+      await connection.sync({ alter: true });
       console.log('Banco de dados sincronizado (modo desenvolvimento).');
     } else {
-      await sequelize.sync();
+      await connection.sync();
       console.log('Banco de dados sincronizado (modo produção).');
     }
   } catch (err) {

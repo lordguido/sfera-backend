@@ -1,12 +1,12 @@
 import express from 'express';
 import chalk from 'chalk';
-import sequelize from './config/database.js';
+import connection from './database/index.js';
 import config from './config/envConfig.js';
 import routes from './routes/routes.js';
-import syncDatabase from './config/syncDatabase.js';
+import syncDatabase from './database/syncDatabase.js';
 import seedDatabase from './database/seedDatabase.js';
 
-sequelize
+connection
   .authenticate()
   .then(() => {
     console.log('Conexão com o banco de dados bem-sucedida!');
@@ -15,13 +15,11 @@ sequelize
     console.error('Erro ao conectar ao banco de dados:', err);
   });
 
-syncDatabase();
-
-if (process.env.NODE_ENV === 'development') {
-  seedDatabase();
-}
+//syncDatabase();
 
 const app = express();
+
+app.use(express.json());
 
 app.use((req, res, next) => {
   const formattedDate = new Date().toLocaleString('pt-BR', {
