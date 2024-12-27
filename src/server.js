@@ -38,7 +38,7 @@ app.listen(config.port, () => {
     '\n',
     chalk.green.bold('━━━━━━━━━━━━━━━━━━━━━━━'),
     '\n',
-    chalk.green.bold('  SERVER STARTED  🟢  '),
+    chalk.green.bold(' 🟢 SERVER STARTED 🟢 '),
     '\n',
     chalk.green.bold('━━━━━━━━━━━━━━━━━━━━━━━'),
     '\n',
