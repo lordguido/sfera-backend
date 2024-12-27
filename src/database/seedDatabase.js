@@ -3,7 +3,7 @@ import User from '../models/User.js';
 const seedDatabase = async () => {
   try {
     const user = await User.create({
-      username: 'admin',
+      username: 'admin2',
       password: '123456',
     });
     console.log('Usuário criado:', user.toJSON());
