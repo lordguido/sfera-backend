@@ -1,11 +1,10 @@
-const logSequelize = process.env.NODE_ENV === 'dev' ? true : false;
-
-console.log('process.env.NODE_ENV', process.env.NODE_ENV);
-console.log('logSequelize', logSequelize);
-
 export default {
   dialect: 'postgres',
-  logging: logSequelize,
+  host: process.env.DB_HOST,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  logging: process.env.NODE_ENV === 'dev' ? console.log : false,
   define: {
     timestamps: true,
     underscored: true,

@@ -1,10 +1,8 @@
 import express from 'express';
 import chalk from 'chalk';
-import connection from './database/index.js';
 import config from './config/envConfig.js';
+import connection from './database/index.js';
 import routes from './routes/routes.js';
-import syncDatabase from './database/syncDatabase.js';
-import seedDatabase from './database/seedDatabase.js';
 
 connection
   .authenticate()
@@ -14,8 +12,6 @@ connection
   .catch((err) => {
     console.error('Erro ao conectar ao banco de dados:', err);
   });
-
-//syncDatabase();
 
 const app = express();
 
