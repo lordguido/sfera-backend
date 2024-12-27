@@ -1,7 +1,17 @@
 import express from 'express';
 import chalk from 'chalk';
+import sequelize from './config/database.js';
 import config from './config/configServer.js';
 import routes from './routes/routes.js';
+
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Conexão com o banco de dados bem-sucedida!');
+  })
+  .catch((err) => {
+    console.error('Erro ao conectar ao banco de dados:', err);
+  });
 
 const app = express();
 
