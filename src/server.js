@@ -16,7 +16,7 @@ connection
   });
 
 syncDatabase();
-seedDatabase();
+//seedDatabase();
 
 const app = express();
 
