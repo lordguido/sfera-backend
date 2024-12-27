@@ -1,4 +1,10 @@
+# Dependencies
 node_modules/
+
+# Environment files in src/config
 src/config/.env
-src/config/.env.*
+src/config/.env*
 !src/config/.env.example
+
+# Logs
+*.log
