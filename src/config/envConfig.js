@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 
 const envFiles = {
-  prod: './src/config/.env.prod',
+  prod: './src/config/.env',
   dev: './src/config/.env.dev',
 };
 const envPath = envFiles[process.env.NODE_ENV] || '.env';

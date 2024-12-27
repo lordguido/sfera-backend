@@ -2,7 +2,7 @@ import sequelize from './database.js';
 
 const syncDatabase = async () => {
   try {
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === 'dev') {
       await sequelize.sync({ alter: true });
       console.log('Banco de dados sincronizado (modo desenvolvimento).');
     } else {
