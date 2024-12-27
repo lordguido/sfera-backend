@@ -3,6 +3,8 @@ import chalk from 'chalk';
 import sequelize from './config/database.js';
 import config from './config/envConfig.js';
 import routes from './routes/routes.js';
+import syncDatabase from './config/syncDatabase.js';
+import seedDatabase from './database/seedDatabase.js';
 
 sequelize
   .authenticate()
@@ -12,6 +14,12 @@ sequelize
   .catch((err) => {
     console.error('Erro ao conectar ao banco de dados:', err);
   });
+
+syncDatabase();
+
+if (process.env.NODE_ENV === 'development') {
+  seedDatabase();
+}
 
 const app = express();
 
