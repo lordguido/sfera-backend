@@ -1,23 +1,9 @@
 import { Sequelize } from 'sequelize';
-import dotenv from 'dotenv';
+import config from './envConfig.js';
 
-const envFiles = {
-  prod: './src/config/.env.prod',
-  dev: './src/config/.env.dev',
-};
-
-const envPath = envFiles[process.env.NODE_ENV] || '.env';
-
-dotenv.config({ path: envPath });
-
-if (!process.env.DB_URL) {
-  console.error('Error: .env file is not being loaded or DB_URL variable is missing.');
-  process.exit(1);
-}
-
-const sequelize = new Sequelize(process.env.DB_URL, {
+const sequelize = new Sequelize(config.dbUrl, {
   dialect: 'postgres',
-  logging: true,
+  logging: console.log,
 });
 
 export default sequelize;

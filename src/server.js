@@ -1,7 +1,7 @@
 import express from 'express';
 import chalk from 'chalk';
 import sequelize from './config/database.js';
-import config from './config/configServer.js';
+import config from './config/envConfig.js';
 import routes from './routes/routes.js';
 
 sequelize
