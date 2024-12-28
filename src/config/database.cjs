@@ -2,9 +2,9 @@ require('dotenv').config({
   path: process.env.NODE_ENV === 'dev' ? './src/config/.env.dev' : './src/config/.env',
 });
 
-const config = {
-  url: process.env.DB_URL,
+module.exports = {
   dialect: 'postgres',
+  url: process.env.DB_URL,
   dialectOptions: {
     ssl: {
       require: true,
@@ -15,8 +15,4 @@ const config = {
     timestamps: true,
     underscored: true,
   },
-  migrationStorageTableName: 'sequelize_meta',
-  seederStorageTableName: 'sequelize_data',
 };
-
-module.exports = config;

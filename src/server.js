@@ -2,7 +2,7 @@ import express from 'express';
 import chalk from 'chalk';
 import config from './config/envConfig.js';
 import connection from './database/index.js';
-import routes from './routes/routes.js';
+import routes from './api/routes/routes.js';
 import syncDatabase from './database/syncDatabase.js';
 
 connection
