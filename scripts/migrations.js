@@ -6,66 +6,83 @@ const execAsync = promisify(exec);
 
 async function generate(name) {
   try {
-    console.log('Gerando migration...');
+    console.log('Generating migration...');
     const { stdout } = await execAsync(`npx sequelize-cli migration:generate --name ${name}`);
     console.log(stdout);
 
-    // Extrai o caminho sem caracteres ANSI e sem duplicação
-    const match = stdout.match(/New migration was created at (.*\.js)/);
+    const match = stdout.match(/New migration was created at (.+\.js)/);
     if (match) {
-      const filePath = match[1]
-        .trim()
-        // Remove códigos de cores ANSI
-        .replace(/\u001b\[\d+m/g, '')
-        // Remove caminho duplicado se existir
-        .replace(/.*backend-sfera\/(.*)/, '$1');
-
-      const oldPath = filePath;
+      const oldPath = match[1];
       const newPath = oldPath.replace('.js', '.cjs');
-
       await rename(oldPath, newPath);
-      console.log(`Migration renomeada para: ${newPath}`);
+      console.log(`Migration renamed to: ${newPath}`);
     }
   } catch (error) {
-    console.error('Erro ao gerar migration:', error.message);
-    if (error.stderr) console.error('Erro detalhado:', error.stderr);
+    console.error('Error generating migration:', error);
   }
 }
 
 async function migrate() {
   try {
-    console.log('Executando migrations...');
+    console.log('Running migrations...');
     const { stdout, stderr } = await execAsync('npx sequelize-cli db:migrate');
     console.log(stdout);
     if (stderr) console.error(stderr);
   } catch (error) {
-    console.error('Erro ao executar migrations:', error.message);
-    if (error.stderr) console.error('Erro detalhado:', error.stderr);
+    console.error('Error running migrations:', error);
   }
 }
 
 async function undo() {
   try {
-    console.log('Revertendo última migration...');
+    console.log('Reverting last migration...');
     const { stdout, stderr } = await execAsync('npx sequelize-cli db:migrate:undo');
     console.log(stdout);
     if (stderr) console.error(stderr);
   } catch (error) {
-    console.error('Erro ao reverter migration:', error.message);
-    if (error.stderr) console.error('Erro detalhado:', error.stderr);
+    console.error('Error reverting migration:', error);
+  }
+}
+
+async function seed(type = 'all') {
+  try {
+    console.log('Running seeds...');
+    const command =
+      type === 'all'
+        ? 'npx sequelize-cli db:seed:all'
+        : `npx sequelize-cli db:seed --seed src/database/seeders/${type}.cjs`;
+
+    const { stdout, stderr } = await execAsync(command);
+    console.log(stdout);
+    if (stderr) console.error(stderr);
+  } catch (error) {
+    console.error('Error running seeds:', error);
+  }
+}
+
+async function seedUndo(type = 'all') {
+  try {
+    console.log('Reverting seeds...');
+    const command = type === 'all' ? 'npx sequelize-cli db:seed:undo:all' : 'npx sequelize-cli db:seed:undo';
+
+    const { stdout, stderr } = await execAsync(command);
+    console.log(stdout);
+    if (stderr) console.error(stderr);
+  } catch (error) {
+    console.error('Error reverting seeds:', error);
   }
 }
 
 const command = process.argv[2];
-const migrationName = process.argv[3];
+const param = process.argv[3];
 
 switch (command) {
   case 'generate':
-    if (!migrationName) {
-      console.error('Por favor, forneça um nome para a migration');
+    if (!param) {
+      console.error('Please provide a name.');
       process.exit(1);
     }
-    generate(migrationName);
+    generate(param);
     break;
   case 'migrate':
     migrate();
@@ -73,7 +90,13 @@ switch (command) {
   case 'undo':
     undo();
     break;
+  case 'seed':
+    seed(param);
+    break;
+  case 'seed:undo':
+    seedUndo(param);
+    break;
   default:
-    console.error('Comando inválido. Use: generate, migrate ou undo');
+    console.error('Invalid command. Use: generate, migrate, undo, seed, seed:undo');
     process.exit(1);
 }

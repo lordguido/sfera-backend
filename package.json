@@ -10,9 +10,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cross-env NODE_ENV=dev node --watch --trace-deprecation src/server.js",
     "start": "cross-env NODE_ENV=prod node src/server.js",
-    "migration:generate": "node scripts/migrations.js generate",
-    "migration:migrate": "node scripts/migrations.js migrate",
-    "migration:undo": "node scripts/migrations.js undo"
+    "db:generate": "node scripts/migrations.js generate",
+    "db:migrate": "node scripts/migrations.js migrate",
+    "db:undo": "node scripts/migrations.js undo",
+    "db:seed": "node scripts/migrations.js seed",
+    "db:seed:undo": "node scripts/migrations.js seed:undo"
   },
   "repository": {
     "type": "git",
