@@ -1,7 +1,5 @@
 import config from './envConfig.js';
 
-console.log('config.database.host', config.database.host);
-
 export default {
   dialect: 'postgres',
   host: config.database.host,

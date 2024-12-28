@@ -4,7 +4,6 @@ import config from './config/envConfig.js';
 import connection from './database/index.js';
 import routes from './routes/routes.js';
 import syncDatabase from './database/syncDatabase.js';
-import seedDatabase from './database/seedDatabase.js';
 
 connection
   .authenticate()
@@ -16,7 +15,6 @@ connection
   });
 
 syncDatabase();
-//seedDatabase();
 
 const app = express();
 
@@ -33,7 +31,7 @@ app.use((req, res, next) => {
 
 app.use(routes);
 
-app.listen(config.port, () => {
+app.listen(config.app.port, () => {
   console.info(
     '\n',
     chalk.green.bold('━━━━━━━━━━━━━━━━━━━━━━━'),
@@ -42,9 +40,9 @@ app.listen(config.port, () => {
     '\n',
     chalk.green.bold('━━━━━━━━━━━━━━━━━━━━━━━'),
     '\n',
-    `Port: ${config.port}`,
+    `Port: ${config.app.port}`,
     '\n',
-    `Version: ${config.version}`,
+    `Version: ${config.app.version}`,
     '\n',
     `Environment: ${config.environment}`,
     '\n'

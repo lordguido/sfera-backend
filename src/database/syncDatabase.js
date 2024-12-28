@@ -1,5 +1,7 @@
 import connection from './index.js';
 
+console.log('process.env.NODE_ENV:', process.env.NODE_ENV);
+
 const syncDatabase = async () => {
   try {
     if (process.env.NODE_ENV === 'dev') {
