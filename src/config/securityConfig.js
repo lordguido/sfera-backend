@@ -4,9 +4,7 @@ const isProd = config.environment === 'PRODUCTION';
 
 // Configuração do CORS
 const corsOptions = {
-  origin: isProd
-    ? config.app.url // Usando a URL já validada do envConfig
-    : ['http://localhost:3000', 'http://localhost:5173'],
+  origin: isProd ? config.app.url : ['http://localhost:3000', 'http://localhost:5173'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['Content-Range', 'X-Content-Range'],
