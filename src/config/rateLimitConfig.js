@@ -1,4 +1,3 @@
-// src/config/rateLimitConfig.js
 import rateLimit from 'express-rate-limit';
 import config from './envConfig.js';
 import chalk from 'chalk';

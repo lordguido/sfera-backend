@@ -1,4 +1,3 @@
-// src/config/securityConfig.js
 import config from './envConfig.js';
 
 const isProd = config.environment === 'PRODUCTION';

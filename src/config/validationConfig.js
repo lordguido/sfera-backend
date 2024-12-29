@@ -1,4 +1,3 @@
-// src/config/validationConfig.js
 import { body } from 'express-validator';
 
 // Configuração global para tamanho máximo de payload
