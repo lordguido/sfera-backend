@@ -14,15 +14,12 @@ async function generate(name) {
     log(`Gerando migração: ${name}...`);
     const { stdout } = await execAsync(`npx sequelize-cli migration:generate --name ${name}`);
 
-    // Tenta extrair o caminho do arquivo gerado pelo sequelize-cli
     const match = stdout.match(/New migration was created at ([^\n]+)/);
     if (match) {
-      // Remove possíveis espaços ou ponto no final (no Windows geralmente tem ". ")
       const filePath = match[1].trim().replace(/\.\s*$/, '');
       log(`Novo arquivo de migração gerado em: ${filePath}`);
     } else {
       logError('Não foi possível identificar o arquivo de migração no output.');
-      // Se quiser debugar, pode descomentar a linha abaixo:
       // logError('Output completo:', stdout);
     }
   } catch (error) {
