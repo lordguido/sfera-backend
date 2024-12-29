@@ -1,36 +1,57 @@
 import express from 'express';
 import chalk from 'chalk';
+import cors from 'cors';
+import helmet from 'helmet';
 import config from './config/envConfig.js';
-import connection from './database/index.js';
+import connection from './database/connection.js';
 import routes from './api/routes/routes.js';
 import syncDatabase from './database/syncDatabase.js';
+import { corsOptions, helmetOptions } from './config/securityConfig.js';
+import { defaultLimiter } from './config/rateLimitConfig.js';
+import { payloadConfig } from './config/validationConfig.js';
 
+// Conexão com o banco de dados
 connection
   .authenticate()
   .then(() => {
-    console.log('Conexão com o banco de dados bem-sucedida!');
+    console.log(chalk.blue('✓ Conexão com o banco de dados bem-sucedida!'));
   })
   .catch((err) => {
-    console.error('Erro ao conectar ao banco de dados:', err);
+    console.error(chalk.red('Erro ao conectar ao banco de dados:'), err);
   });
 
 syncDatabase();
 
 const app = express();
 
-app.use(express.json());
+// Configurações de segurança
+app.use(cors(corsOptions));
+console.log(chalk.blue('✓ CORS configurado'));
 
+app.use(helmet(helmetOptions));
+console.log(chalk.blue('✓ Helmet configurado'));
+
+// Configuração de payload e parsers
+app.use(express.json(payloadConfig));
+app.use(express.urlencoded({ extended: true, ...payloadConfig }));
+
+// Rate Limiter global
+app.use(defaultLimiter);
+
+// Logger de requisições
 app.use((req, res, next) => {
   const formattedDate = new Date().toLocaleString('pt-BR', {
     dateStyle: 'short',
     timeStyle: 'medium',
   });
-  console.log(`[${formattedDate}] => [${req.method}] ${req.url}`);
+  console.log(chalk.cyan(`[${formattedDate}] => [${req.method}] ${req.url}`));
   next();
 });
 
+// Rotas
 app.use(routes);
 
+// Inicialização do servidor
 app.listen(config.app.port, () => {
   console.info(
     '\n',

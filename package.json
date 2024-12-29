@@ -41,6 +41,8 @@
     "helmet": "^7.0.0",
     "pg": "^8.13.1",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.5"
+    "sequelize": "^6.37.5",
+    "express-rate-limit": "^7.1.5",
+    "express-validator": "^7.0.1"
   }
 }
