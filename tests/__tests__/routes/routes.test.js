@@ -12,6 +12,11 @@ describe('Testes de Rotas', () => {
     expect(res.status).toBe(200);
   });
 
+  it('Deve responder à rota teste', async () => {
+    const res = await request(app).get('/test');
+    expect(res.status).toBe(200);
+  });
+
   it('Deve retornar 404 para rota inexistente', async () => {
     const res = await request(app).get('/rota-inexistente');
     expect(res.status).toBe(404);
