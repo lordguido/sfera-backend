@@ -1,7 +1,9 @@
 export default {
   testEnvironment: 'node',
   moduleFileExtensions: ['js', 'json', 'node'],
-  moduleDirectories: ['node_modules'],
+  moduleDirectories: ['node_modules', 'src'],
+  clearMocks: true,
+  collectCoverage: true,
   verbose: true,
   transform: {},
   moduleNameMapper: {
