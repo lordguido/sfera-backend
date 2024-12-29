@@ -8,3 +8,6 @@ src/config/.env.*
 
 # Logs
 *.log
+
+#Backups
+.tmp.driveupload
