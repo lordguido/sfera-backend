@@ -12,11 +12,19 @@ export default {
   define: {
     timestamps: true,
     underscored: true,
+    timezone: '-03:00',
+    dialectOptions: {
+      useUTC: false,
+      dateStrings: true,
+      typeCast: true,
+    },
   },
   dialectOptions: {
     ssl: {
       require: true,
       rejectUnauthorized: false,
     },
+    useUTC: false,
+    timezone: '-03:00',
   },
 };
