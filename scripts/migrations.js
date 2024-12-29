@@ -1,102 +1,130 @@
+// scripts/migrations.js
 import { exec } from 'child_process';
-import { rename } from 'fs/promises';
 import { promisify } from 'util';
+import chalk from 'chalk';
 
 const execAsync = promisify(exec);
 
+// Logs simples
+const log = (message) => console.log(chalk.blue(message));
+const logError = (message) => console.error(chalk.red(message));
+
+// Geração de migrações
 async function generate(name) {
   try {
-    console.log('Generating migration...');
+    log(`Gerando migração: ${name}...`);
     const { stdout } = await execAsync(`npx sequelize-cli migration:generate --name ${name}`);
-    console.log(stdout);
 
-    const match = stdout.match(/New migration was created at (.+\.js)/);
+    // Tenta extrair o caminho do arquivo gerado pelo sequelize-cli
+    const match = stdout.match(/New migration was created at ([^\n]+)/);
     if (match) {
-      const oldPath = match[1];
-      const newPath = oldPath.replace('.js', '.cjs');
-      await rename(oldPath, newPath);
-      console.log(`Migration renamed to: ${newPath}`);
+      // Remove possíveis espaços ou ponto no final (no Windows geralmente tem ". ")
+      const filePath = match[1].trim().replace(/\.\s*$/, '');
+      log(`Novo arquivo de migração gerado em: ${filePath}`);
+    } else {
+      logError('Não foi possível identificar o arquivo de migração no output.');
+      // Se quiser debugar, pode descomentar a linha abaixo:
+      // logError('Output completo:', stdout);
     }
   } catch (error) {
-    console.error('Error generating migration:', error);
+    logError(`Erro ao gerar migração: ${error.message}`);
+    if (error.stderr) {
+      logError(`Detalhes adicionais: ${error.stderr}`);
+    }
   }
 }
 
+// Execução das migrações
 async function migrate() {
   try {
-    console.log('Running migrations...');
-    const { stdout, stderr } = await execAsync('npx sequelize-cli db:migrate');
-    console.log(stdout);
-    if (stderr) console.error(stderr);
+    log('Executando migrações...');
+    await execAsync('npx sequelize-cli db:migrate');
+    log('Migrações executadas com sucesso.');
   } catch (error) {
-    console.error('Error running migrations:', error);
+    logError(`Erro ao executar migrações: ${error.message}`);
+    if (error.stderr) {
+      logError(`Detalhes adicionais: ${error.stderr}`);
+    }
   }
 }
 
+// Reversão da última migração
 async function undo() {
   try {
-    console.log('Reverting last migration...');
-    const { stdout, stderr } = await execAsync('npx sequelize-cli db:migrate:undo');
-    console.log(stdout);
-    if (stderr) console.error(stderr);
+    log('Revertendo a última migração...');
+    await execAsync('npx sequelize-cli db:migrate:undo');
+    log('Última migração revertida com sucesso.');
   } catch (error) {
-    console.error('Error reverting migration:', error);
+    logError(`Erro ao reverter migração: ${error.message}`);
+    if (error.stderr) {
+      logError(`Detalhes adicionais: ${error.stderr}`);
+    }
   }
 }
 
+// Execução de seeds
 async function seed(type = 'all') {
   try {
-    console.log('Running seeds...');
-    const command =
+    const comando =
       type === 'all'
         ? 'npx sequelize-cli db:seed:all'
         : `npx sequelize-cli db:seed --seed src/database/seeders/${type}.cjs`;
 
-    const { stdout, stderr } = await execAsync(command);
-    console.log(stdout);
-    if (stderr) console.error(stderr);
+    log(`Executando seeds (${type})...`);
+    await execAsync(comando);
+    log('Seeds executados com sucesso.');
   } catch (error) {
-    console.error('Error running seeds:', error);
+    logError(`Erro ao executar seeds: ${error.message}`);
+    if (error.stderr) {
+      logError(`Detalhes adicionais: ${error.stderr}`);
+    }
   }
 }
 
+// Reversão de seeds
 async function seedUndo(type = 'all') {
   try {
-    console.log('Reverting seeds...');
-    const command = type === 'all' ? 'npx sequelize-cli db:seed:undo:all' : 'npx sequelize-cli db:seed:undo';
+    const comando = type === 'all' ? 'npx sequelize-cli db:seed:undo:all' : 'npx sequelize-cli db:seed:undo';
 
-    const { stdout, stderr } = await execAsync(command);
-    console.log(stdout);
-    if (stderr) console.error(stderr);
+    log(`Revertendo seeds (${type})...`);
+    await execAsync(comando);
+    log('Seeds revertidos com sucesso.');
   } catch (error) {
-    console.error('Error reverting seeds:', error);
+    logError(`Erro ao reverter seeds: ${error.message}`);
+    if (error.stderr) {
+      logError(`Detalhes adicionais: ${error.stderr}`);
+    }
   }
 }
 
+// Controle dos comandos CLI
 const command = process.argv[2];
 const param = process.argv[3];
 
-switch (command) {
-  case 'generate':
-    if (!param) {
-      console.error('Please provide a name.');
+// Use uma IIFE para aguardar as async
+(async () => {
+  switch (command) {
+    case 'generate':
+      if (!param) {
+        logError('Por favor, forneça um nome para a migração.');
+        process.exit(1);
+      }
+      await generate(param);
+      break;
+    case 'migrate':
+      await migrate();
+      break;
+    case 'undo':
+      await undo();
+      break;
+    case 'seed':
+      await seed(param);
+      break;
+    case 'seed:undo':
+      await seedUndo(param);
+      break;
+    default:
+      logError('Comando inválido. Use: generate, migrate, undo, seed, seed:undo');
       process.exit(1);
-    }
-    generate(param);
-    break;
-  case 'migrate':
-    migrate();
-    break;
-  case 'undo':
-    undo();
-    break;
-  case 'seed':
-    seed(param);
-    break;
-  case 'seed:undo':
-    seedUndo(param);
-    break;
-  default:
-    console.error('Invalid command. Use: generate, migrate, undo, seed, seed:undo');
-    process.exit(1);
-}
+  }
+})();
