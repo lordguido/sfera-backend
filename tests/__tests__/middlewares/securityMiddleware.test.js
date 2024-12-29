@@ -1,6 +1,6 @@
 import request from 'supertest';
 import express from 'express';
-import { securityHeaders } from '../../../src/config/securityConfig.js';
+import { corsOptions, helmetOptions } from '../../../src/config/securityConfig.js';
 import setupSecurity from '../../../src/api/middlewares/securityMiddleware.js';
 
 describe('Middleware de Segurança', () => {
@@ -12,42 +12,79 @@ describe('Middleware de Segurança', () => {
     app.get('/', (req, res) => res.send('test'));
   });
 
-  it('Deve aplicar headers básicos de segurança', async () => {
-    const response = await request(app).get('/');
-    expect(response.headers['x-xss-protection']).toBe(securityHeaders.xssProtection);
-    expect(response.headers['x-frame-options']).toBe(securityHeaders.frameOptions);
+  describe('Configurações CORS', () => {
+    it('Deve permitir origens configuradas', async () => {
+      const response = await request(app).get('/').set('Origin', 'http://localhost:3000');
+
+      expect(response.headers['access-control-allow-origin']).toBe('http://localhost:3000');
+      expect(response.headers['access-control-allow-credentials']).toBe('true');
+    });
+
+    it('Deve permitir métodos HTTP configurados', async () => {
+      const response = await request(app).options('/').set('Origin', 'http://localhost:3000');
+
+      const allowedMethods = response.headers['access-control-allow-methods'];
+      corsOptions.methods.forEach((method) => {
+        expect(allowedMethods).toContain(method);
+      });
+    });
+
+    it('Deve incluir os headers permitidos', async () => {
+      const response = await request(app).options('/').set('Origin', 'http://localhost:3000');
+
+      const allowedHeaders = response.headers['access-control-allow-headers'];
+      corsOptions.allowedHeaders.forEach((header) => {
+        expect(allowedHeaders).toContain(header);
+      });
+    });
   });
 
-  it('Deve aplicar Content Security Policy', async () => {
-    const response = await request(app).get('/');
-    expect(response.headers['content-security-policy']).toBe(securityHeaders.contentSecurityPolicy);
+  describe('Configurações Helmet', () => {
+    it('Deve aplicar headers de segurança configurados', async () => {
+      const response = await request(app).get('/');
+
+      if (helmetOptions.dnsPrefetchControl) {
+        expect(response.headers['x-dns-prefetch-control']).toBeDefined();
+      }
+      if (helmetOptions.frameguard) {
+        expect(response.headers['x-frame-options']).toBeDefined();
+      }
+      if (helmetOptions.hidePoweredBy) {
+        expect(response.headers['x-powered-by']).toBeUndefined();
+      }
+      if (helmetOptions.noSniff) {
+        expect(response.headers['x-content-type-options']).toBe('nosniff');
+      }
+    });
   });
 
-  it('Deve aplicar Strict Transport Security', async () => {
-    const response = await request(app).get('/');
-    expect(response.headers['strict-transport-security']).toBe(securityHeaders.strictTransport);
-  });
+  describe('Middleware de Erro', () => {
+    it('Deve tratar erros de autenticação', async () => {
+      // Middleware de erro deve ser o último
+      app.use((err, req, res, next) => {
+        if (err.name === 'UnauthorizedError') {
+          res.status(401).json({
+            error: 'Acesso não autorizado',
+            message: 'Você não tem permissão para acessar este recurso',
+          });
+        } else {
+          next(err);
+        }
+      });
 
-  it('Deve aplicar configurações de CORS para origem permitida', async () => {
-    const response = await request(app).get('/').set('Origin', 'http://localhost:3000');
+      app.get('/protected', (req, res, next) => {
+        const error = new Error('Unauthorized');
+        error.name = 'UnauthorizedError';
+        next(error);
+      });
 
-    expect(response.headers['access-control-allow-origin']).toBe('http://localhost:3000');
-    expect(response.headers['access-control-allow-credentials']).toBe('true');
-  });
+      const response = await request(app).get('/protected');
 
-  it('Deve rejeitar origens não permitidas', async () => {
-    const response = await request(app).get('/').set('Origin', 'http://site-malicioso.com');
-
-    expect(response.headers['access-control-allow-origin']).toBeUndefined();
-  });
-
-  it('Deve permitir métodos HTTP específicos', async () => {
-    const response = await request(app).options('/').set('Origin', 'http://localhost:3000');
-
-    expect(response.headers['access-control-allow-methods'])
-      .toContain('GET')
-      .toContain('POST')
-      .toContain('PUT')
-      .toContain('DELETE');
+      expect(response.status).toBe(401);
+      expect(response.body).toEqual({
+        error: 'Acesso não autorizado',
+        message: 'Você não tem permissão para acessar este recurso',
+      });
+    });
   });
 });

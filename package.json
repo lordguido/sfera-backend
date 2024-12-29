@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "test:file": "cross-env NODE_ENV=test node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --verbose",
     "dev": "cross-env NODE_ENV=dev node --no-warnings --watch src/server.js",
     "start": "cross-env NODE_ENV=prod node src/server.js",
     "db:generate": "node scripts/migrations.js generate",

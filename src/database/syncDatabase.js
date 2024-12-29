@@ -1,4 +1,4 @@
-import connection from './connection.js';
+import { connectionDb, initConnectionDb } from './connectionDb.js';
 
 const syncDatabase = async () => {
   try {
@@ -6,10 +6,11 @@ const syncDatabase = async () => {
       console.warn('Sincronização do banco só deve ser usada em desenvolvimento!');
       return;
     }
-    await connection.sync({ alter: true });
-    console.log('Banco de dados sincronizado (modo desenvolvimento).');
+    await initConnectionDb();
+    await connectionDb.sync({ alter: true });
+    console.log('✅ Banco de dados sincronizado (modo desenvolvimento).');
   } catch (err) {
-    console.error('Erro ao sincronizar o banco de dados:', err);
+    console.error('❌ Erro ao sincronizar o banco de dados:', err);
   }
 };
 

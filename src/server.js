@@ -1,71 +1,70 @@
 import express from 'express';
 import chalk from 'chalk';
-import cors from 'cors';
-import helmet from 'helmet';
 import config from './config/envConfig.js';
-import connection from './database/connection.js';
+import { initConnectionDb } from './database/connectionDb.js';
+import securityMiddleware from './api/middlewares/securityMiddleware.js';
 import routes from './api/routes/routes.js';
-import syncDatabase from './database/syncDatabase.js';
-import { corsOptions, helmetOptions } from './config/securityConfig.js';
 import { defaultLimiter } from './config/rateLimitConfig.js';
 import { payloadConfig } from './config/validationConfig.js';
 
-// Conexão com o banco de dados
-connection
-  .authenticate()
-  .then(() => {
-    console.log(chalk.blue('✓ Conexão com o banco de dados bem-sucedida!'));
-  })
-  .catch((err) => {
-    console.error(chalk.red('Erro ao conectar ao banco de dados:'), err);
-  });
+const createServer = async () => {
+  try {
+    // Inicializa conexão com o banco de dados
+    await initConnectionDb();
 
-syncDatabase();
+    // Inicializa o servidor Express
+    const app = express();
+    configureApp(app);
 
-const app = express();
+    // Inicia o servidor na porta configurada
+    app.listen(config.app.port, () => {
+      console.info(formatStartupLog());
+    });
+  } catch (err) {
+    console.error(chalk.red('❌ Erro ao iniciar o servidor:', err));
+    process.exit(1);
+  }
+};
 
-// Configurações de segurança
-app.use(cors(corsOptions));
-console.log(chalk.blue('✓ CORS configurado'));
+// Configuração geral do app
+const configureApp = (app) => {
+  // Segurança
+  securityMiddleware(app);
 
-app.use(helmet(helmetOptions));
-console.log(chalk.blue('✓ Helmet configurado'));
+  // Configuração de payloads
+  app.use(express.json(payloadConfig));
+  app.use(express.urlencoded({ extended: true, ...payloadConfig }));
 
-// Configuração de payload e parsers
-app.use(express.json(payloadConfig));
-app.use(express.urlencoded({ extended: true, ...payloadConfig }));
+  // Rate Limiter global
+  app.use(defaultLimiter);
 
-// Rate Limiter global
-app.use(defaultLimiter);
+  // Logger de requisições
+  app.use(requestLogger);
+
+  // Rotas
+  app.use(routes);
+};
 
 // Logger de requisições
-app.use((req, res, next) => {
+const requestLogger = (req, res, next) => {
   const formattedDate = new Date().toLocaleString('pt-BR', {
     dateStyle: 'short',
     timeStyle: 'medium',
   });
   console.log(chalk.cyan(`[${formattedDate}] => [${req.method}] ${req.url}`));
   next();
-});
+};
 
-// Rotas
-app.use(routes);
+// Log formatado de inicialização
+const formatStartupLog = () => `
+${chalk.green.bold('━━━━━━━━━━━━━━━━━━━━━━━')}
+${chalk.green.bold(' 🟢 SERVER STARTED 🟢 ')}
+${chalk.green.bold('━━━━━━━━━━━━━━━━━━━━━━━')}
+Port: ${config.app.port}
+Version: ${config.app.version}
+Environment: ${config.environment}
+${chalk.green.bold('━━━━━━━━━━━━━━━━━━━━━━━')}
+`;
 
-// Inicialização do servidor
-app.listen(config.app.port, () => {
-  console.info(
-    '\n',
-    chalk.green.bold('━━━━━━━━━━━━━━━━━━━━━━━'),
-    '\n',
-    chalk.green.bold(' 🟢 SERVER STARTED 🟢 '),
-    '\n',
-    chalk.green.bold('━━━━━━━━━━━━━━━━━━━━━━━'),
-    '\n',
-    `Port: ${config.app.port}`,
-    '\n',
-    `Version: ${config.app.version}`,
-    '\n',
-    `Environment: ${config.environment}`,
-    '\n'
-  );
-});
+// Inicializa o servidor
+createServer();
