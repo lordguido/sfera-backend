@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/lordguido/sfera-backend/issues"
   },
-  "homepage": "https://github.com/lordguido/sfera-backend#readme"
+  "homepage": "https://github.com/lordguido/sfera-backend#readme",
+  "devDependencies": {
+    "prettier": "^3.4.2"
+  }
 }
