@@ -5,9 +5,10 @@
   "description": "Sistema de gestão completo para lojas",
   "main": "src/server.js",
   "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
     "dev": "node --no-warnings --watch src/server.js",
-    "start": "node src/server.js",
-    "test": "node --test"
+    "start": "node src/server.js"
   },
   "repository": {
     "type": "git",
@@ -21,11 +22,13 @@
   "homepage": "https://github.com/lordguido/sfera-backend#readme",
   "devDependencies": {
     "@eslint/js": "^9.18.0",
+    "@vitest/coverage-v8": "^2.1.8",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "prettier": "^3.4.2"
+    "prettier": "^3.4.2",
+    "vitest": "^2.1.8"
   }
 }
