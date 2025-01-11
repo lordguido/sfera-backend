@@ -1,0 +1,22 @@
+{
+  "name": "sfera-backend",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Sistema de gestão completo para lojas",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --no-warnings --watch src/server.js",
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lordguido/sfera-backend.git"
+  },
+  "author": "Rodrigo Dematei de Freitas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lordguido/sfera-backend/issues"
+  },
+  "homepage": "https://github.com/lordguido/sfera-backend#readme"
+}
