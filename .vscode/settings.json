@@ -1,5 +1,9 @@
 {
-  "cSpell.words": ["sfera", "Sfera"],
+  "cSpell.words": [
+    "airbnb",
+    "sfera",
+    "Sfera"
+  ],
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": "always"
