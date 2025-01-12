@@ -9,6 +9,13 @@
     "ecmaVersion": "latest"
   },
   "rules": {
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "always"
+      }
+    ],
     "indent": ["error", 2],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
