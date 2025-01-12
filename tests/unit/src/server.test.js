@@ -1,5 +1,5 @@
 import { expect, test, describe } from 'vitest';
-import sum from '../../src/server';
+import sum from '../../../src/server.js';
 
 const ZERO = 0;
 const ONE = 1;
