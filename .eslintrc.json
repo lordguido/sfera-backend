@@ -60,5 +60,12 @@
     "no-await-in-loop": "warn",
     "no-promise-executor-return": "error",
     "max-classes-per-file": ["error", 1]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
   }
 }
