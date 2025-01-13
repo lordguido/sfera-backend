@@ -67,6 +67,7 @@
       "node": {
         "extensions": [".js", ".json", ".node"]
       }
-    }
+    },
+    "import/ignore": ["vitest"]
   }
 }
