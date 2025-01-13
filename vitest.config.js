@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
@@ -6,8 +6,9 @@ export default defineConfig({
     environment: 'node',
     include: ['tests/**/*.test.js'],
     coverage: {
-      provider: 'c8',
-      reporter: ['text', 'html'],
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
     },
   },
 });
+
