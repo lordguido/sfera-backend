@@ -1,12 +1,13 @@
 {
   "env": {
-    "commonjs": true,
+    "commonjs": false,
     "es2021": true,
     "node": true
   },
   "extends": "airbnb-base",
   "parserOptions": {
-    "ecmaVersion": "latest"
+    "ecmaVersion": 2022,
+    "sourceType": "module"
   },
   "rules": {
     "import/extensions": [
@@ -61,11 +62,10 @@
     "no-promise-executor-return": "error",
     "max-classes-per-file": ["error", 1]
   },
-  "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.js", "**/*.spec.js"]}],
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        "extensions": [".js", ".json", ".node"]
       }
     }
   }
