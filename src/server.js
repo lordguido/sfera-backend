@@ -7,7 +7,7 @@ const HTTP_STATUS = {
 };
 const MESSAGES = {
   SERVER_RUNNING: 'Servidor Express configurado e funcionando!',
-  SERVER_STATUS: (nodeEnv, port) => `Servidor rodando no modo ${nodeEnv} na porta ${port}`,
+  SERVER_STATUS: (nodeEnv, port) => `Servidor rodando em modo ${nodeEnv} na porta ${port}`,
 };
 
 app.use(express.json());
