@@ -61,6 +61,7 @@
     "no-promise-executor-return": "error",
     "max-classes-per-file": ["error", 1]
   },
+  "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.js", "**/*.spec.js"]}],
   "settings": {
     "import/resolver": {
       "node": {
