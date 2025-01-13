@@ -6,7 +6,7 @@ const HTTP_STATUS = {
   OK: 200,
 };
 const MESSAGES = {
-  SERVER_RUNNING: 'Servidor Express configurado e funcionando!',
+  SERVER_RUNNING: 'Teste Servidor Express configurado e funcionando!',
   SERVER_STATUS: (nodeEnv, port) => `Teste Servidor rodando em modo ${nodeEnv} na porta ${port}`,
 };
 
