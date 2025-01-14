@@ -6,3 +6,6 @@ coverage/
 
 # Environment variables
 .env
+
+#Database
+src/database/*.sqlite
