@@ -8,13 +8,7 @@ Instalar:
  - uuid
 
 Definir:
- - Qual banco de dado?
- - Qual ORM?
  - Qual lib para datas
-
-Com base no que foi identificado no repositório, vou sugerir uma **estrutura de pastas inicial** bem organizada, levando em conta que o backend terá múltiplas responsabilidades, como APIs, rotinas de manutenção, geração de relatórios e controle. Aqui está a proposta de estrutura, seguida de uma explicação de cada pasta:
-
----
 
 ### Estrutura de Pastas
 
