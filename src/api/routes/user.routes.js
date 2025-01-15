@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { hashPassword } from '../../utils/bcryptUtils.js';
 import User from '../../database/models/user.js';
 import HTTP_STATUS from '../../config/httpStatus.js';
 
@@ -25,10 +26,15 @@ userRouter.post('/user', async (req, res) => {
         .send('Todos os campos são obrigatórios: login, password, name, email.');
     }
 
-    await User.create({
-      login, password, name, email,
+    const hashedPassword = await hashPassword(password);
+
+    const newUser = await User.create({
+      login, password: hashedPassword, name, email,
     });
-    return res.status(HTTP_STATUS.CREATED).send('Usuário criado com sucesso!');
+    return res.status(HTTP_STATUS.CREATED).json({
+      message: 'Usuário registrado com sucesso!',
+      user: newUser,
+    });
   } catch (error) {
     if (error.name === 'SequelizeUniqueConstraintError') {
       const duplicatedField = error.errors?.[0]?.path;
