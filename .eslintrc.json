@@ -44,7 +44,7 @@
     "no-warning-comments": ["warn", { "terms": ["todo", "fixme"] }],
     "eqeqeq": ["error", "always"],
     "no-else-return": "error",
-    "max-len": ["error", { "code": 100 }],
+    "max-len": ["error", { "code": 120 }],
     "complexity": ["warn", 10],
     "max-depth": ["error", 4],
     "max-params": ["warn", 4],
